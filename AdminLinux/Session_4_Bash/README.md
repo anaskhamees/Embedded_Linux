@@ -219,7 +219,7 @@ echo "Inside script: MYVAR=$MYVAR"
 
   ```bash
   var="John"
-  echo $var1       # Error if var1 is not defined
+  echo $var1       # Will Not print any thing if var1 is not defined
   ```
 
 ### 2.1.4. Single Quotes vs. Double Quotes
@@ -633,10 +633,19 @@ Logical operators are used to combine multiple conditions.
 The `if` statement in Bash is used to execute a block of code based on whether a condition is true or false. The basic syntax of an `if` statement in Bash is:
 
 ```bash
+#!/bin/bash
+
 if [ condition ]; then
-  # Code to execute if condition is true
+  # Code to execute if the condition is true
+elif [ another_condition ]; then
+  # Code to execute if the elif condition is true
+else
+  # Code to execute if no condition is true
 fi
+
 ```
+
+
 
 ```bash
 if [ 1 -eq 1 ]; then
@@ -784,7 +793,7 @@ fi
 
 The `for` loop iterates over a list of items or a range of numbers.
 
-#### Example 1: Iterating Over a List
+#### Example 1: Iterating Over a List [Array iteration for loops]
 
 ```bash
 #!/bin/bash
@@ -804,7 +813,7 @@ done
 - `for item in "${items[@]}"; do`: This starts the loop, iterating over each element in the array.
 - `echo "Item: $item"`: This prints each item.
 
-#### Example 2: Iterating Over a Range
+#### Example 2: Iterating Over a Range [Range-based for loop]
 
 ```bash
 #!/bin/bash
@@ -1035,18 +1044,55 @@ echo "${numbers[*]}"
 # Output: one two three
 ```
 
-- Using `&&` (logical AND) and `||` (logical OR) allows combining multiple conditions in Bash scripts.
-- Quotes around `${arr[@]}` and `${arr[*]}` affect how array elements are interpreted and printed.
-- `${arr[@]}` without quotes expands each element as a separate word.
-- `"${arr[@]}"` with quotes expands each element as a separate quoted word.
-- `"${arr[*]}"` with quotes treats the entire array as a single string, with each element separated by the first character of the IFS (Internal Field Separator).
+#### But with loops:
 
-In summary:
+```bash
+arr=("apple" "banana" "cherry melon")
 
-- `echo "${numbers[@]}"` prints each array element as a separate argument, resulting in `one two three`.
-- `echo "${numbers[*]}"` prints the entire array as a single string with spaces separating the elements, also resulting in `one two three`.
+for item in "${arr[@]}"; do
+    echo "$item"
+done
+```
 
-Here are some more detailed examples combining arrays, logical operators, and quotes in Bash:
+**Output**:
+
+```bash
+apple
+banana
+cherry melon
+```
+
+In this case, `${arr[@]}` treats each element separately, even if it contains spaces.
+
+Now, with `${arr[*]}`:
+
+```bash
+for item in "${arr[*]}"; do
+    echo "$item"
+done
+```
+
+**Output**:
+
+```
+apple banana cherry melon
+```
+
+Here, `${arr[*]}` joins the elements into a single string and outputs it as one line.
+
+- **`${arr[@]}`**: Expands to all elements as separate arguments, preserving spaces when quoted (`"${arr[@]}"`).
+- **`${arr[\*]}`**: Expands to a single string (elements joined by `IFS`), and when quoted (`"${arr[*]}"`), it joins all elements into one string with spaces (or `IFS`).
+
+**When to Use:**
+
+- Use **`${arr[@]}`** when you need to handle array elements individually, especially when they might contain spaces.
+- Use **`${arr[\*]}`** when you need to treat the entire array as a single string or when joining array elements into one string.
+
+>**`${arr[@]}`**: Expands to all elements as separate arguments, preserving spaces when quoted (`"${arr[@]}"`).
+>
+>**`${arr[*]}`**: Expands to a single string (elements joined by `IFS`), and when quoted (`"${arr[*]}"`), it joins all elements into one string with spaces (or `IFS`).
+
+
 
 ### 2.5.10. Arrays, Logical Operators, and Quotes Examples
 
